@@ -23,9 +23,23 @@ declare(strict_types=1);
 
 namespace pjz9n\farmlandguard;
 
+use pocketmine\block\Dirt;
+use pocketmine\block\Farmland;
+use pocketmine\event\block\BlockFormEvent;
+use pocketmine\event\Listener;
 use pocketmine\plugin\PluginBase;
 
-class Main extends PluginBase
+class Main extends PluginBase implements Listener
 {
-    //
+    public function onEnable(): void
+    {
+        $this->getServer()->getPluginManager()->registerEvents($this, $this);
+    }
+
+    public function guardFarmland(BlockFormEvent $event): void
+    {
+        $block = $event->getBlock();
+        $newState = $event->getNewState();
+        $event->setCancelled($block instanceof Farmland && $newState instanceof Dirt);
+    }
 }
